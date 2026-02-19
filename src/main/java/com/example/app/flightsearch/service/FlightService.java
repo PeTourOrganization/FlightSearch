@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Service
 public class FlightService {
 
@@ -18,9 +21,11 @@ public class FlightService {
         this.flightLogRepository = flightLogRepository;
     }
 
-    public ResponseEntity<String> getFlightsAvailable() {
-        var respA = restClient.get()
-                .uri("http://localhost:8080/providerA/flightsAvailable")
+    public List<Flight> getFlightsAvailable(String origin, String destination, LocalDateTime departureDate) {
+
+        var respA = restClient
+                .get()
+                .uri("http://localhost:8081/providerA/flightsAvailable?")
                 .retrieve()
                 .onStatus(response -> {
                     if(!response.getStatusCode().is2xxSuccessful()){
@@ -29,10 +34,10 @@ public class FlightService {
                     }
                     return true;
                 })
-                .body(new ParameterizedTypeReference<>() {});
+                .body(new ParameterizedTypeReference<List<Flight>>() {});
 
         var respB = restClient.get()
-                .uri("http://localhost:8081/providerB/flightsAvailable")
+                .uri("http://localhost:8082/providerB/flightsAvailable")
                 .retrieve()
                 .onStatus(response -> {
                     if(!response.getStatusCode().is2xxSuccessful()){
