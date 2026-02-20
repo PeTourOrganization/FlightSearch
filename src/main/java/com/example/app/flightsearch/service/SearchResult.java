@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@XmlRootElement(name = "SearchResult", namespace = "http://localhost:8080/flights")
+@XmlRootElement(name = "SearchResult", namespace = "http://petour.com/flights")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SearchResult {
 	@XmlElement(required = true)

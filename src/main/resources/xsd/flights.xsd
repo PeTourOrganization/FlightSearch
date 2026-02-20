@@ -1,6 +1,6 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:tns="http://localhost:8080/flights"
-           targetNamespace="http://localhost:8080/flights"
+           xmlns:tns="http://petour.com/flights"
+           targetNamespace="http://petour.com/flights"
            elementFormDefault="qualified">
 
     <xs:element name="SearchRequest">

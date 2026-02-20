@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 @Service
 public class FlightService {
 
+    private static final String PROV_A_URI = "http://localhost:8081/ws";
+    private static final String PROV_B_URI = "http://localhost:8082/ws";
+
     private final WebServiceTemplate webServiceTemplate;
     private final FlightLogRepository flightLogRepository;
 
@@ -19,9 +22,15 @@ public class FlightService {
 
     public SearchResult getFlightsAvailable(String origin, String destination, LocalDateTime departureDate) {
         var searchRequest = new SearchRequest(origin, destination, departureDate);
-        return (SearchResult)webServiceTemplate.marshalSendAndReceive("http://localhost:8081/ws", searchRequest);
+        var providerAResults = marshallSendReceive(PROV_A_URI, searchRequest);
+        var providerBResults = marshallSendReceive(PROV_B_URI, searchRequest);
+        return new SearchResult();
     }
 
+
+    private SearchResult marshallSendReceive(String uri, SearchRequest request) {
+        return (SearchResult)webServiceTemplate.marshalSendAndReceive(uri, request);
+    }
 
 //    public List<Flight> getFlightsAvailable(String origin, String destination, LocalDateTime departureDate) {
 //
