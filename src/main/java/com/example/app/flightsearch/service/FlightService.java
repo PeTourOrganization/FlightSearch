@@ -25,7 +25,7 @@ public class FlightService {
 
         var respA = restClient
                 .get()
-                .uri("http://localhost:8081/providerA/flightsAvailable?")
+                .uri("http://localhost:8081/providerA/flightsAvailable?origin=" + origin + "&destination=" + destination + "&departureDate=" + departureDate)
                 .retrieve()
                 .onStatus(response -> {
                     if(!response.getStatusCode().is2xxSuccessful()){
