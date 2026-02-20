@@ -1,5 +1,7 @@
 package com.example.app.flightsearch.service;
 
+import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -7,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-
+@Service
 public class SearchService {
 
 	   public SearchResult availabilitySearch(SearchRequest request) {

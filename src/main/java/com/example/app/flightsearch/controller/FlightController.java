@@ -4,10 +4,9 @@ import com.example.app.flightsearch.service.FlightService;
 import com.example.app.flightsearch.service.SearchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/flights")
@@ -23,9 +22,12 @@ public class FlightController {
     @Operation(summary = "Search flights", description = "Find flights by origin, destination and departure date")
     @GetMapping("/flightsAvailable")
     public String getFlightsAvailable(
-            @RequestBody SearchRequest request
+            @RequestParam String origin,
+            @RequestParam String destination,
+            @RequestParam LocalDateTime departureDate
     ) {
-        flightService.getFlightsAvailable(request.getOrigin(), request.getDestination(), request.getDepartureDate());
+        var request = new SearchRequest(origin, destination, departureDate);
+        var res = flightService.getFlightsAvailable(request.getOrigin(), request.getDestination(), request.getDepartureDate());
         return "flights available";
     }
 

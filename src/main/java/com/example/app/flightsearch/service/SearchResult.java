@@ -1,11 +1,21 @@
 package com.example.app.flightsearch.service;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
 import java.util.ArrayList;
 import java.util.List;
 
+
+@XmlRootElement(name = "SearchResult", namespace = "http://localhost:8080/flights")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class SearchResult {
+	@XmlElement(required = true)
 	private boolean hasError = false;
 
+	@XmlElement(name = "flightOptions")
 	private List<Flight> flightOptions = new ArrayList<>();
 	private String errorMessage;
 
