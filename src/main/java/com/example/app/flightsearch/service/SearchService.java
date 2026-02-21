@@ -1,5 +1,8 @@
-package com.example.app.flightsearch.providers.separateproviders;
+package com.example.app.flightsearch.service;
 
+import com.example.app.flightsearch.providers.separateproviders.Flight;
+import com.example.app.flightsearch.providers.separateproviders.SearchRequest;
+import com.example.app.flightsearch.providers.separateproviders.SearchResult;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

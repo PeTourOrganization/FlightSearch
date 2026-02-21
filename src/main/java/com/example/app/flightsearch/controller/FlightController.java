@@ -47,7 +47,7 @@ public class FlightController {
 
     @Tag(name = "Flight Search", description = "Operations pertaining to flight search")
     @Operation(summary = "Search flights", description = "Find flights by origin, destination and departure date")
-    @GetMapping("/flightsAvailableSingleService")
+    @GetMapping("/flightsAvailableSingleServiceSingle")
     public List<Flight> getFlightsAvailableSingle(
             @RequestParam String origin,
             @RequestParam String destination,
@@ -60,7 +60,7 @@ public class FlightController {
 
     @Tag(name = "Flight Search", description = "Operations pertaining to flight search")
     @Operation(summary = "Get Cheapest Flights", description = "Find flights by origin, destination and departure date. Gets the cheapest flights")
-    @GetMapping("/flightsAvailableCheapest")
+    @GetMapping("/flightsAvailableCheapestSingle")
     public List<Flight> getCheapestFlightsAvailableSingle(
             @RequestParam String origin,
             @RequestParam String destination,
