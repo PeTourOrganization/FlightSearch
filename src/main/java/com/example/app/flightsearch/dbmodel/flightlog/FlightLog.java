@@ -1,23 +1,41 @@
 package com.example.app.flightsearch.dbmodel.flightlog;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 @Entity
-@Table(name = "flightlog_requests", schema = "public")
+@Table(name = "flight_logs", schema = "public")
 public class FlightLog {
     @Id
-    @Column(name = "req_id", unique = true, nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "flight_id")
+    private Long flightId;
 
-    @Column(name = "start_date", columnDefinition = "date")
-    private LocalDateTime startDate;
+    @Column(name = "flight_no")
+    private String flightNo;
 
-    @Column(name = "end_date", columnDefinition = "date")
-    private LocalDateTime endDate;
+    @Column(name = "origin")
+    private String origin;
 
-    @Column(name = "context")
-    private String context;
+    @Column(name = "destination")
+    private String destination;
+
+    @Column(name = "departure_datetime")
+    private LocalDateTime departuredatetime;
+
+    @Column(name = "arrival_datetime")
+    private LocalDateTime arrivaldatetime;
+
+    @Column(name = "price")
+    private BigDecimal price;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "resp_id", nullable = false)
+    private ResponseLog responseLog;
 }
