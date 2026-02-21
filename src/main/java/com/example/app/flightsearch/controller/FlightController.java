@@ -1,8 +1,9 @@
 package com.example.app.flightsearch.controller;
 
-import com.example.app.flightsearch.providers.separateproviders.Flight;
+import com.example.app.flightsearch.dbmodel.flightlog.RequestLog;
+import com.example.app.flightsearch.providers.info.Flight;
 import com.example.app.flightsearch.service.FlightService;
-import com.example.app.flightsearch.providers.separateproviders.SearchRequest;
+import com.example.app.flightsearch.providers.requests.SearchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +47,7 @@ public class FlightController {
     }
 
     @Tag(name = "Flight Search", description = "Operations pertaining to flight search")
-    @Operation(summary = "Search flights", description = "Find flights by origin, destination and departure date")
+    @Operation(summary = "Search flights", description = "Find flights by origin, destination and departure date from single service")
     @GetMapping("/flightsAvailableSingleServiceSingle")
     public List<Flight> getFlightsAvailableSingle(
             @RequestParam String origin,
@@ -59,7 +60,7 @@ public class FlightController {
 
 
     @Tag(name = "Flight Search", description = "Operations pertaining to flight search")
-    @Operation(summary = "Get Cheapest Flights", description = "Find flights by origin, destination and departure date. Gets the cheapest flights")
+    @Operation(summary = "Get Cheapest Flights", description = "Find flights by origin, destination and departure date. Gets the cheapest flights from single service")
     @GetMapping("/flightsAvailableCheapestSingle")
     public List<Flight> getCheapestFlightsAvailableSingle(
             @RequestParam String origin,
@@ -68,6 +69,13 @@ public class FlightController {
     ) {
         var request = new SearchRequest(origin, destination, departureDate);
         return flightService.getCheapestFlightsAvailableSingle(request.getOrigin(), request.getDestination(), request.getDepartureDate());
+    }
+
+    @Tag(name = "Flight Search", description = "Operations pertaining to flight search")
+    @Operation(summary = "Find Flights By Id", description = "Find flights by request id, ")
+    @GetMapping("/requestLogById")
+    public List<List<Flight>> getRequestLogById(@RequestParam Integer id){
+        return flightService.getRequestLog(id);
     }
 
 }

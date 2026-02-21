@@ -15,7 +15,7 @@ public class FlightLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "flight_id")
-    private Long flightId;
+    private Integer flightId;
 
     @Column(name = "flight_no")
     private String flightNo;

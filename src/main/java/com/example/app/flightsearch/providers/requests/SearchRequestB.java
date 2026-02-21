@@ -1,4 +1,4 @@
-package com.example.app.flightsearch.providers.separateproviders;
+package com.example.app.flightsearch.providers.requests;
 
 import com.example.app.flightsearch.util.LocalDateTimeAdapter;
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -10,9 +10,9 @@ import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDateTime;
 
 
-@XmlRootElement(name = "SearchRequest", namespace = "http://petour.com/flights")
+@XmlRootElement(name = "SearchRequestB", namespace = "http://petour.com/flights")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SearchRequest {
+public class SearchRequestB {
 	@XmlElement(namespace = "http://petour.com/flights", required = true)
 	private String origin = "";
 
@@ -24,10 +24,10 @@ public class SearchRequest {
 	private LocalDateTime departureDate;
 
 	// Constructors
-	public SearchRequest() {
+	public SearchRequestB() {
 	}
 
-	public SearchRequest(String origin, String destination, LocalDateTime departureDate) {
+	public SearchRequestB(String origin, String destination, LocalDateTime departureDate) {
 		this.origin = origin;
 		this.destination = destination;
 		this.departureDate = departureDate;

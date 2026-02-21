@@ -22,7 +22,7 @@ public class RequestLog implements Serializable {
     @Id
     @Column(name = "req_id", unique = true, nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long requestId;
+    private Integer requestId;
 
     @Column(name = "origin")
     private String origin;

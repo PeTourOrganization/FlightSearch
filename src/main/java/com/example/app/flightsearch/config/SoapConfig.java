@@ -1,7 +1,9 @@
 package com.example.app.flightsearch.config;
 
-import com.example.app.flightsearch.providers.separateproviders.SearchRequest;
-import com.example.app.flightsearch.providers.separateproviders.SearchResult;
+import com.example.app.flightsearch.providers.requests.SearchRequest;
+import com.example.app.flightsearch.providers.requests.SearchRequestA;
+import com.example.app.flightsearch.providers.requests.SearchRequestB;
+import com.example.app.flightsearch.providers.response.SearchResult;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
@@ -13,7 +15,11 @@ public class SoapConfig {
     public Jaxb2Marshaller marshaller() {
         var marshaller = new Jaxb2Marshaller();
 //        marshaller.setContextPath("com.example.app.flightsearch.service");
-        marshaller.setClassesToBeBound(SearchRequest.class, SearchResult.class);
+        marshaller.setClassesToBeBound(
+                SearchRequest.class,
+                SearchRequestA.class,
+                SearchRequestB.class,
+                SearchResult.class);
         return marshaller;
     }
 

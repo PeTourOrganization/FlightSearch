@@ -1,4 +1,4 @@
-package com.example.app.flightsearch.providers.providera;
+package com.example.app.flightsearch.providers.requests;
 
 import com.example.app.flightsearch.util.LocalDateTimeAdapter;
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -10,7 +10,7 @@ import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDateTime;
 
 
-@XmlRootElement(name = "ProviderARequest", namespace = "http://petour.com/flights")
+@XmlRootElement(name = "SearchRequestA", namespace = "http://petour.com/flights")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SearchRequestA {
 	@XmlElement(namespace = "http://petour.com/flights", required = true)

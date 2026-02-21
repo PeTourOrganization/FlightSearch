@@ -13,6 +13,26 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="SearchRequestA">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="origin" type="xs:string"/>
+                <xs:element name="destination" type="xs:string"/>
+                <xs:element name="departureDate" type="xs:dateTime"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="SearchRequestB">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="origin" type="xs:string"/>
+                <xs:element name="destination" type="xs:string"/>
+                <xs:element name="departureDate" type="xs:dateTime"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
     <xs:element name="SearchResultResponse">
         <xs:complexType>
             <xs:sequence>

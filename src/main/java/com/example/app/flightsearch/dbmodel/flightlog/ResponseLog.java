@@ -20,7 +20,7 @@ public class ResponseLog implements Serializable {
     @Id
     @Column(name = "resp_id", unique = true, nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long responseId;
+    private Integer responseId;
 
     @Column(name = "has_error")
     private Boolean hasError;

@@ -1,5 +1,6 @@
-package com.example.app.flightsearch.providers.providera;
+package com.example.app.flightsearch.providers.response;
 
+import com.example.app.flightsearch.providers.info.Flight;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;

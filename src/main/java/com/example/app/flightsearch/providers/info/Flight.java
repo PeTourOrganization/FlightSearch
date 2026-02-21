@@ -1,4 +1,4 @@
-package com.example.app.flightsearch.providers.providera;
+package com.example.app.flightsearch.providers.info;
 
 import com.example.app.flightsearch.util.LocalDateTimeAdapter;
 import jakarta.xml.bind.annotation.XmlAccessType;

@@ -6,12 +6,11 @@ import com.example.app.flightsearch.dataaccess.flightlog.ResponseLogRepository;
 import com.example.app.flightsearch.dbmodel.flightlog.FlightLog;
 import com.example.app.flightsearch.dbmodel.flightlog.RequestLog;
 import com.example.app.flightsearch.dbmodel.flightlog.ResponseLog;
-import com.example.app.flightsearch.providers.providera.SearchRequestA;
-import com.example.app.flightsearch.providers.providerb.SearchRequestB;
-import com.example.app.flightsearch.providers.separateproviders.Flight;
-import com.example.app.flightsearch.providers.separateproviders.SearchRequest;
-import com.example.app.flightsearch.providers.separateproviders.SearchResult;
-import org.springframework.data.util.Pair;
+import com.example.app.flightsearch.providers.info.Flight;
+import com.example.app.flightsearch.providers.requests.SearchRequestA;
+import com.example.app.flightsearch.providers.requests.SearchRequestB;
+import com.example.app.flightsearch.providers.requests.SearchRequest;
+import com.example.app.flightsearch.providers.response.SearchResult;
 import org.springframework.stereotype.Service;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
@@ -81,6 +80,27 @@ public class FlightService {
         return getFlightsAvailableSingle(origin, destination, departureDate).stream()
                 .sorted(Comparator.comparing(Flight::getPrice))
                 .collect(Collectors.toList());
+    }
+
+    public List<List<Flight>> getRequestLog(Integer id){
+        var responseIds = requestLogRepository.findAllByRequestId(id);
+        var flightLogs = responseIds.stream()
+                .map(flightLogRepository::findFlightsByRespId)
+                .toList();
+
+        return flightLogs.stream()
+                .map(flights -> flights.stream()
+                        .map(flightLog -> {
+                            var flight = new Flight();
+                            flight.setFlightNo(flightLog.getFlightNo());
+                            flight.setOrigin(flightLog.getOrigin());
+                            flight.setDestination(flightLog.getDestination());
+                            flight.setDepartureDateTime(flightLog.getDepartureDateTime());
+                            flight.setArrivalDateTime(flightLog.getArrivalDateTime());
+                            flight.setPrice(flightLog.getPrice());
+                            return flight;
+                        }).toList())
+                .toList();
     }
 
 
