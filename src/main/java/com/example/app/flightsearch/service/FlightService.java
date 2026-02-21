@@ -11,14 +11,12 @@ import com.example.app.flightsearch.providers.providerb.SearchRequestB;
 import com.example.app.flightsearch.providers.separateproviders.Flight;
 import com.example.app.flightsearch.providers.separateproviders.SearchRequest;
 import com.example.app.flightsearch.providers.separateproviders.SearchResult;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -113,14 +111,18 @@ public class FlightService {
         requestLog.setDepartureDate(searchRequest.getDepartureDate());
 
         var flightsA = getListOfFlights(providerAResults);
+        flightLogRepository.saveAll(flightsA);
+
         var responseLogA = new ResponseLog();
         responseLogA.setRequestLog(requestLog);
         responseLogA.setFlightOptions(flightsA);
+        responseLogRepository.save(responseLogA);
 
         var flightsB = getListOfFlights(providerBResults);
         var responseLogB = new ResponseLog();
         responseLogB.setRequestLog(requestLog);
         responseLogB.setFlightOptions(flightsB);
+        responseLogRepository.save(responseLogB);
 
         var responseLogs = Arrays.asList(responseLogA, responseLogB);
         requestLog.setResponseLogs(responseLogs);
@@ -135,25 +137,27 @@ public class FlightService {
         requestLog.setDestination(searchRequestA.getDestination());
         requestLog.setDepartureDate(searchRequestA.getDepartureDate());
 
-        var responseLogA = prepareResponseLog(requestLog, providerAResults);
+        var mapEntryA = prepareResponseLog(requestLog, providerAResults);
+
+        flightLogRepository.saveAll(mapEntryA.getKey());
 
         requestLog.setOrigin(searchRequestB.getOrigin());
         requestLog.setDestination(searchRequestB.getDestination());
         requestLog.setDepartureDate(searchRequestB.getDepartureDate());
 
-        var responseLogB = prepareResponseLog(requestLog, providerBResults);
+        var mapEntryB = prepareResponseLog(requestLog, providerBResults);
 
-        var responseLogs = Arrays.asList(responseLogA, responseLogB);
+        var responseLogs = Arrays.asList(mapEntryA.getValue(), mapEntryB.getValue());
         requestLog.setResponseLogs(responseLogs);
 
         requestLogRepository.save(requestLog);
     }
 
-    private static ResponseLog prepareResponseLog(RequestLog requestLog, SearchResult searchResult){
-        var flightsA = getListOfFlights(searchResult);
+    private static Map.Entry<List<FlightLog>, ResponseLog> prepareResponseLog(RequestLog requestLog, SearchResult searchResult) {
+        List<FlightLog> flights = getListOfFlights(searchResult);
         var responseLog = new ResponseLog();
         responseLog.setRequestLog(requestLog);
-        responseLog.setFlightOptions(flightsA);
-        return responseLog;
+        responseLog.setFlightOptions(flights);
+        return new AbstractMap.SimpleEntry<>(flights, responseLog);
     }
 }
