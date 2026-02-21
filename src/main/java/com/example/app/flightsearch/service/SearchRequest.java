@@ -1,9 +1,11 @@
 package com.example.app.flightsearch.service;
 
+import com.example.app.flightsearch.util.LocalDateTimeAdapter;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +20,7 @@ public class SearchRequest {
 	private String destination = "";
 
 	@XmlElement(namespace = "http://petour.com/flights", required = true)
+	@XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
 	private LocalDateTime departureDate;
 
 	// Constructors
