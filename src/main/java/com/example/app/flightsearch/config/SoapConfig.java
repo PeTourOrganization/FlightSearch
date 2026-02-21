@@ -1,7 +1,7 @@
 package com.example.app.flightsearch.config;
 
-import com.example.app.flightsearch.service.SearchRequest;
-import com.example.app.flightsearch.service.SearchResult;
+import com.example.app.flightsearch.providers.separateproviders.SearchRequest;
+import com.example.app.flightsearch.providers.separateproviders.SearchResult;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;

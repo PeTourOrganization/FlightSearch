@@ -1,8 +1,8 @@
 package com.example.app.flightsearch.controller;
 
-import com.example.app.flightsearch.service.Flight;
+import com.example.app.flightsearch.providers.separateproviders.Flight;
 import com.example.app.flightsearch.service.FlightService;
-import com.example.app.flightsearch.service.SearchRequest;
+import com.example.app.flightsearch.providers.separateproviders.SearchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +43,31 @@ public class FlightController {
     ) {
         var request = new SearchRequest(origin, destination, departureDate);
         return flightService.getCheapestFlightsAvailable(request.getOrigin(), request.getDestination(), request.getDepartureDate());
+    }
+
+    @Tag(name = "Flight Search", description = "Operations pertaining to flight search")
+    @Operation(summary = "Search flights", description = "Find flights by origin, destination and departure date")
+    @GetMapping("/flightsAvailableSingleService")
+    public List<Flight> getFlightsAvailableSingle(
+            @RequestParam String origin,
+            @RequestParam String destination,
+            @RequestParam LocalDateTime departureDate
+    ) {
+        var request = new SearchRequest(origin, destination, departureDate);
+        return flightService.getFlightsAvailableSingle(request.getOrigin(), request.getDestination(), request.getDepartureDate());
+    }
+
+
+    @Tag(name = "Flight Search", description = "Operations pertaining to flight search")
+    @Operation(summary = "Get Cheapest Flights", description = "Find flights by origin, destination and departure date. Gets the cheapest flights")
+    @GetMapping("/flightsAvailableCheapest")
+    public List<Flight> getCheapestFlightsAvailableSingle(
+            @RequestParam String origin,
+            @RequestParam String destination,
+            @RequestParam LocalDateTime departureDate
+    ) {
+        var request = new SearchRequest(origin, destination, departureDate);
+        return flightService.getCheapestFlightsAvailableSingle(request.getOrigin(), request.getDestination(), request.getDepartureDate());
     }
 
 }

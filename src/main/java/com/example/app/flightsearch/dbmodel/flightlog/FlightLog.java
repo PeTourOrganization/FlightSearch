@@ -27,10 +27,10 @@ public class FlightLog {
     private String destination;
 
     @Column(name = "departure_datetime")
-    private LocalDateTime departuredatetime;
+    private LocalDateTime departureDateTime;
 
     @Column(name = "arrival_datetime")
-    private LocalDateTime arrivaldatetime;
+    private LocalDateTime arrivalDateTime;
 
     @Column(name = "price")
     private BigDecimal price;
