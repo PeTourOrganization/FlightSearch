@@ -88,7 +88,7 @@ public class FlightService {
         return (SearchResult)webServiceTemplate.marshalSendAndReceive(uri, request);
     }
 
-    private static List<FlightLog> getListOfFlights(SearchResult searchResult){
+    private static List<FlightLog> getListOfFlights(SearchResult searchResult, ResponseLog responseLog){
         return searchResult
                 .getFlightOptions()
                 .stream()
@@ -99,6 +99,8 @@ public class FlightService {
                     flightLog.setFlightNo(flight.getFlightNo());
                     flightLog.setDestination(flight.getDestination());
                     flightLog.setOrigin(flight.getOrigin());
+                    flightLog.setPrice(flight.getPrice());
+                    flightLog.setResponseLog(responseLog);
                     return flightLog;
                 })
                 .toList();
@@ -110,22 +112,23 @@ public class FlightService {
         requestLog.setDestination(searchRequest.getDestination());
         requestLog.setDepartureDate(searchRequest.getDepartureDate());
 
-        var flightsA = getListOfFlights(providerAResults);
-        flightLogRepository.saveAll(flightsA);
-
         var responseLogA = new ResponseLog();
+//        flightLogRepository.saveAll(flightsA);
+
+        var flightsA = getListOfFlights(providerAResults, responseLogA);
         responseLogA.setRequestLog(requestLog);
         responseLogA.setFlightOptions(flightsA);
-        responseLogRepository.save(responseLogA);
+//        responseLogRepository.save(responseLogA);
 
-        var flightsB = getListOfFlights(providerBResults);
         var responseLogB = new ResponseLog();
+        var flightsB = getListOfFlights(providerBResults, responseLogB);
         responseLogB.setRequestLog(requestLog);
         responseLogB.setFlightOptions(flightsB);
-        responseLogRepository.save(responseLogB);
+//        responseLogRepository.save(responseLogB);
 
         var responseLogs = Arrays.asList(responseLogA, responseLogB);
         requestLog.setResponseLogs(responseLogs);
+
 
         requestLogRepository.save(requestLog);
     }
@@ -137,9 +140,10 @@ public class FlightService {
         requestLog.setDestination(searchRequestA.getDestination());
         requestLog.setDepartureDate(searchRequestA.getDepartureDate());
 
+
         var mapEntryA = prepareResponseLog(requestLog, providerAResults);
 
-        flightLogRepository.saveAll(mapEntryA.getKey());
+//        flightLogRepository.saveAll(mapEntryA.getKey());
 
         requestLog.setOrigin(searchRequestB.getOrigin());
         requestLog.setDestination(searchRequestB.getDestination());
@@ -154,8 +158,8 @@ public class FlightService {
     }
 
     private static Map.Entry<List<FlightLog>, ResponseLog> prepareResponseLog(RequestLog requestLog, SearchResult searchResult) {
-        List<FlightLog> flights = getListOfFlights(searchResult);
         var responseLog = new ResponseLog();
+        List<FlightLog> flights = getListOfFlights(searchResult, responseLog);
         responseLog.setRequestLog(requestLog);
         responseLog.setFlightOptions(flights);
         return new AbstractMap.SimpleEntry<>(flights, responseLog);
