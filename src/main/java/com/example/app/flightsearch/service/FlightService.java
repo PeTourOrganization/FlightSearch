@@ -6,6 +6,7 @@ import com.example.app.flightsearch.dataaccess.flightlog.ResponseLogRepository;
 import com.example.app.flightsearch.dbmodel.flightlog.FlightLog;
 import com.example.app.flightsearch.dbmodel.flightlog.RequestLog;
 import com.example.app.flightsearch.dbmodel.flightlog.ResponseLog;
+import com.example.app.flightsearch.exceptions.FlightNotFoundException;
 import com.example.app.flightsearch.providers.info.Flight;
 import com.example.app.flightsearch.providers.requests.SearchRequestA;
 import com.example.app.flightsearch.providers.requests.SearchRequestB;
@@ -13,12 +14,13 @@ import com.example.app.flightsearch.providers.requests.SearchRequest;
 import com.example.app.flightsearch.providers.response.SearchResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -45,7 +47,7 @@ public class FlightService {
         this.responseLogRepository = responseLogRepository;
     }
 
-    public List<Flight> getFlightsAvailable(String origin, String destination, LocalDateTime departureDate) {
+    public ResponseEntity<List<Flight>> getFlightsAvailable(String origin, String destination, LocalDateTime departureDate) {
         var searchRequest = new SearchRequest(origin, destination, departureDate);
         SearchResult providerAResults;
         SearchResult providerBResults;
@@ -67,35 +69,70 @@ public class FlightService {
                 .toList();
 
         saveSeparateProvidersLogs(searchRequest, providerAResults, providerBResults);
-        return combined.isEmpty() ?  new ArrayList<>() : combined;
+        if (combined.isEmpty()) {
+            logger.warn("No flights found for the selected criteria");
+            throw new FlightNotFoundException("NO_FLIGHTS_FOUND: No flights found for the selected criteria");
+//            var errorInfo = new ExceptionInfo("NO_FLIGHTS_FOUND", "No flights found for the selected criteria");
+//            return new BaseResponse<>(new ResponseEntity<>(null, HttpStatus.NOT_FOUND), false, errorInfo);
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Flight");
+//            return new BaseResponse<>(errorInfo, false);
+//            ResponseEntity.status(HttpStatus.NOT_FOUND)
+//                    .body("No flights found for the selected criteria")
+//                    .build()
+        }
+        return new ResponseEntity<>(combined, HttpStatus.OK);
     }
 
-    public List<Flight> getCheapestFlightsAvailable(String origin, String destination, LocalDateTime departureDate) {
-        return getFlightsAvailable(origin, destination, departureDate).stream()
-                .sorted(Comparator.comparing(Flight::getPrice))
-                .collect(Collectors.toList());
+    public ResponseEntity<List<Flight>> getCheapestFlightsAvailable(String origin, String destination, LocalDateTime departureDate) {
+        var resp = getFlightsAvailable(origin, destination, departureDate).getBody();
+        assert resp != null;
+        var res = resp.stream().sorted(Comparator.comparing(Flight::getPrice)).toList();
+        return res.isEmpty() ?  ResponseEntity.status(HttpStatus.NOT_FOUND).build() : new ResponseEntity<>(res, HttpStatus.OK);
+//        return getFlightsAvailable(origin, destination, departureDate).getBody().stream()
+//                .sorted(Comparator.comparing(Flight::getPrice))
+//                .collect(Collectors.toList());
     }
 
-    public List<Flight> getFlightsAvailableSingle(String origin, String destination, LocalDateTime departureDate) {
+    public ResponseEntity<List<Flight>> getFlightsAvailableSingle(String origin, String destination, LocalDateTime departureDate) {
         var searchRequestA = new SearchRequestA(origin, destination, departureDate);
-        var respA = (SearchResult)webServiceTemplate.marshalSendAndReceive(SINGLE_URI, searchRequestA);
+        SearchResult respA;
+        SearchResult respB;
+        try {
+            respA = (SearchResult) webServiceTemplate.marshalSendAndReceive(SINGLE_URI, searchRequestA);
+        } catch (Exception e) {
+            logger.error("Error occurred while calling provider A", e);
+            respA = new SearchResult(true, new ArrayList<>(), "An error occurred on Provider A while searching for flights: " + e.getMessage());
+        }
 
         var searchRequestB = new SearchRequestB(origin, destination, departureDate);
-        var respB = (SearchResult)webServiceTemplate.marshalSendAndReceive(SINGLE_URI, searchRequestB);
+        try {
+            respB = (SearchResult) webServiceTemplate.marshalSendAndReceive(SINGLE_URI, searchRequestB);
+        } catch (Exception e) {
+            logger.error("Error occurred while calling provider A", e);
+            respB = new SearchResult(true, new ArrayList<>(), "An error occurred on Provider A while searching for flights: " + e.getMessage());
+        }
 
         var combined = Stream.concat(respA.getFlightOptions().stream(), respB.getFlightOptions().stream())
                 .distinct()
                 .toList();
 
         saveSeparateProvidersLogs(searchRequestA, searchRequestB, respA, respB);
-        return combined.isEmpty() ?  new ArrayList<>() : combined;
+        if (combined.isEmpty()) {
+            logger.warn("No flights found according to the selected criteria for single search");
+            throw new FlightNotFoundException("NO_FLIGHTS_FOUND: No flights found for the selected criteria");
+        }
+        return new ResponseEntity<>(combined, HttpStatus.OK);
     }
 
 
-    public List<Flight> getCheapestFlightsAvailableSingle(String origin, String destination, LocalDateTime departureDate) {
-        return getFlightsAvailableSingle(origin, destination, departureDate).stream()
-                .sorted(Comparator.comparing(Flight::getPrice))
-                .collect(Collectors.toList());
+    public ResponseEntity<List<Flight>> getCheapestFlightsAvailableSingle(String origin, String destination, LocalDateTime departureDate) {
+        var resp = getFlightsAvailableSingle(origin, destination, departureDate).getBody();
+        assert resp != null;
+        var res = resp.stream().sorted(Comparator.comparing(Flight::getPrice)).toList();
+        return res.isEmpty() ?  ResponseEntity.status(HttpStatus.NOT_FOUND).build() : new ResponseEntity<>(res, HttpStatus.OK);
+//        return getFlightsAvailableSingle(origin, destination, departureDate).stream()
+//                .sorted(Comparator.comparing(Flight::getPrice))
+//                .collect(Collectors.toList());
     }
 
     public List<List<Flight>> getRequestLog(Integer id){

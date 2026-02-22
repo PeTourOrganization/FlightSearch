@@ -1,11 +1,11 @@
 package com.example.app.flightsearch.controller;
 
-import com.example.app.flightsearch.dbmodel.flightlog.RequestLog;
 import com.example.app.flightsearch.providers.info.Flight;
 import com.example.app.flightsearch.service.FlightService;
 import com.example.app.flightsearch.providers.requests.SearchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -24,7 +24,7 @@ public class FlightController {
     @Tag(name = "Flight Search", description = "Operations pertaining to flight search")
     @Operation(summary = "Search flights", description = "Find flights by origin, destination and departure date")
     @GetMapping("/flightsAvailable")
-    public List<Flight> getFlightsAvailable(
+    public ResponseEntity<List<Flight>> getFlightsAvailable(
             @RequestParam String origin,
             @RequestParam String destination,
             @RequestParam LocalDateTime departureDate
@@ -37,7 +37,7 @@ public class FlightController {
     @Tag(name = "Flight Search", description = "Operations pertaining to flight search")
     @Operation(summary = "Get Cheapest Flights", description = "Find flights by origin, destination and departure date. Gets the cheapest flights")
     @GetMapping("/flightsAvailableCheapest")
-    public List<Flight> getCheapestFlightsAvailable(
+    public ResponseEntity<List<Flight>> getCheapestFlightsAvailable(
             @RequestParam String origin,
             @RequestParam String destination,
             @RequestParam LocalDateTime departureDate
@@ -49,7 +49,7 @@ public class FlightController {
     @Tag(name = "Flight Search", description = "Operations pertaining to flight search")
     @Operation(summary = "Search flights", description = "Find flights by origin, destination and departure date from single service")
     @GetMapping("/flightsAvailableSingleServiceSingle")
-    public List<Flight> getFlightsAvailableSingle(
+    public ResponseEntity<List<Flight>> getFlightsAvailableSingle(
             @RequestParam String origin,
             @RequestParam String destination,
             @RequestParam LocalDateTime departureDate
@@ -62,7 +62,7 @@ public class FlightController {
     @Tag(name = "Flight Search", description = "Operations pertaining to flight search")
     @Operation(summary = "Get Cheapest Flights", description = "Find flights by origin, destination and departure date. Gets the cheapest flights from single service")
     @GetMapping("/flightsAvailableCheapestSingle")
-    public List<Flight> getCheapestFlightsAvailableSingle(
+    public ResponseEntity<List<Flight>> getCheapestFlightsAvailableSingle(
             @RequestParam String origin,
             @RequestParam String destination,
             @RequestParam LocalDateTime departureDate
