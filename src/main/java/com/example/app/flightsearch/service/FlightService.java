@@ -72,13 +72,6 @@ public class FlightService {
         if (combined.isEmpty()) {
             logger.warn("No flights found for the selected criteria");
             throw new FlightNotFoundException("NO_FLIGHTS_FOUND: No flights found for the selected criteria");
-//            var errorInfo = new ExceptionInfo("NO_FLIGHTS_FOUND", "No flights found for the selected criteria");
-//            return new BaseResponse<>(new ResponseEntity<>(null, HttpStatus.NOT_FOUND), false, errorInfo);
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Flight");
-//            return new BaseResponse<>(errorInfo, false);
-//            ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                    .body("No flights found for the selected criteria")
-//                    .build()
         }
         return new ResponseEntity<>(combined, HttpStatus.OK);
     }
@@ -88,9 +81,6 @@ public class FlightService {
         assert resp != null;
         var res = resp.stream().sorted(Comparator.comparing(Flight::getPrice)).toList();
         return res.isEmpty() ?  ResponseEntity.status(HttpStatus.NOT_FOUND).build() : new ResponseEntity<>(res, HttpStatus.OK);
-//        return getFlightsAvailable(origin, destination, departureDate).getBody().stream()
-//                .sorted(Comparator.comparing(Flight::getPrice))
-//                .collect(Collectors.toList());
     }
 
     public ResponseEntity<List<Flight>> getFlightsAvailableSingle(String origin, String destination, LocalDateTime departureDate) {
@@ -130,9 +120,6 @@ public class FlightService {
         assert resp != null;
         var res = resp.stream().sorted(Comparator.comparing(Flight::getPrice)).toList();
         return res.isEmpty() ?  ResponseEntity.status(HttpStatus.NOT_FOUND).build() : new ResponseEntity<>(res, HttpStatus.OK);
-//        return getFlightsAvailableSingle(origin, destination, departureDate).stream()
-//                .sorted(Comparator.comparing(Flight::getPrice))
-//                .collect(Collectors.toList());
     }
 
     public List<List<Flight>> getRequestLog(Integer id){
