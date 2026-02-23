@@ -48,7 +48,7 @@ public class FlightController {
 
     @Tag(name = "Flight Search", description = "Operations pertaining to flight search")
     @Operation(summary = "Search flights", description = "Find flights by origin, destination and departure date from single service")
-    @GetMapping("/flightsAvailableSingleServiceSingle")
+    @GetMapping("/flightsAvailableSingle")
     public ResponseEntity<List<Flight>> getFlightsAvailableSingle(
             @RequestParam String origin,
             @RequestParam String destination,
